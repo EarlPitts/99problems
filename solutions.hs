@@ -77,3 +77,68 @@ pack = go []
 -- Problem 10
 encode :: Eq a => [a] -> [(Int,a)]
 encode x = (\x -> (length x, head x)) <$> pack x
+
+-- Problem 11
+data Encoding a =
+    Multiple Int a
+  | Single a
+  deriving Show
+
+encodeModified :: Eq a => [a] -> [Encoding a]
+encodeModified x = (\x ->
+      if length x == 1
+      then Single (head x)
+      else Multiple (length x) (head x))
+    <$> pack x
+
+-- Problem 12
+decodeModified :: [Encoding a] -> [a]
+decodeModified = concatMap decodeSingle
+  where decodeSingle (Multiple n c) = replicate n c
+        decodeSingle (Single c) = [c]
+
+-- Problem 13 TODO
+
+-- Problem 14
+dupli :: [a] -> [a]
+dupli [] = []
+dupli (x:xs) = x:x:dupli xs
+
+-- Problem 15
+repli :: [a] -> Int -> [a]
+repli [] _ = []
+repli (x:xs) n = rep n x <> repli xs n
+  where rep 0 x = []
+        rep n x = x : rep (n-1) x
+
+-- Problem 16
+dropEvery :: [a] -> Int -> [a]
+dropEvery l n = go l n
+  where go [] _ = []
+        go (x:xs) 1 = go xs n
+        go (x:xs) n = x : go xs (n - 1)
+        
+-- Problem 17
+split :: [a] -> Int -> ([a],[a])
+split l n = (\(x,y) -> (reverse x, y)) $ go [] l n
+  where go acc (x:xs) 1 = (x:acc,xs)
+        go acc (x:xs) n = go (x:acc) xs (n-1)
+        go acc [] _ = (acc,[])
+        
+-- Problem 18
+slice :: [a] -> Int -> Int -> [a]
+slice [] _ _ = []
+slice (x:xs) _ 1 = [x]
+slice (x:xs) 1 e = x : slice xs 1 (e-1)
+slice (x:xs) s e = slice xs (s-1) (e-1)
+
+-- Problem 19 TODO
+rotate :: [a] -> Int -> [a]
+rotate = undefined
+
+-- Problem 20 TODO
+removeAt :: Int -> [a] -> [a]
+removeAt = go
+  where go 1 (x:xs) = go 0 xs
+        go n (x:xs) = x : go (n-1) xs
+        go _ [] = []
