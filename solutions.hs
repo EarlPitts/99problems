@@ -135,6 +135,10 @@ slice (x:xs) s e = slice xs (s-1) (e-1)
 -- Problem 19 TODO
 rotate :: [a] -> Int -> [a]
 rotate = undefined
+-- rotate l n = go [] l n
+--   where go acc l 0 = l <> reverse acc
+--         go acc (x:xs) n = go (x:acc) xs (n-1)
+--         go acc [] _ = acc
 
 -- Problem 20 TODO
 removeAt :: Int -> [a] -> [a]
@@ -142,3 +146,17 @@ removeAt = go
   where go 1 (x:xs) = go 0 xs
         go n (x:xs) = x : go (n-1) xs
         go _ [] = []
+
+-- Problem 21
+insertAt :: a -> [a] -> Int -> [a]
+insertAt x xs 1 = x:xs
+insertAt y (x:xs) n = x:insertAt y xs (n-1)
+insertAt y [] _ = [y]
+
+-- Problem 22
+range :: Int -> Int -> [Int]
+-- range x y = [x..y] :)
+range x y = go (y-1) [y]
+  where go cnt acc
+          | cnt == x = cnt:acc
+          | otherwise = go (cnt-1) (cnt:acc)
